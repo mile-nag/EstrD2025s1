@@ -55,7 +55,7 @@ siguiente :: Dir -> Dir
 siguiente Norte = Este
 siguiente Este = Sur
 siguiente Sur = Oeste
-siguiente Oeste = Norte
+siguiente Oeste = error "No existe una dirección al oeste"
 
 {- 3.2 Definir el tipo de dato DiaDeSemana, con las alternativas Lunes, Martes, Miércoles, Jueves, Viernes, Sabado y Domingo. Supongamos que el primer día de la semana es lunes, y el último
 es domingo. Luego implementar las siguientes funciones: -}
