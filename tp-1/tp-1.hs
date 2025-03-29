@@ -96,9 +96,9 @@ diaANumero Domingo = 7
 
 -- 3.2.e Dado un día de la semana indica si no es ni el primer ni el ultimo dia.
 estaEnElMedio :: DiaDeSemana -> Bool
-estaEnElMedio Lunes = True
-estaEnElMedio Domingo = True
-estaEnElMedio _ = False
+estaEnElMedio Lunes = False
+estaEnElMedio Domingo = False
+estaEnElMedio _ = True
 
 {- 3.3 Los booleanos también son un tipo de enumerativo. Un booleano es True o False. Defina las siguientes funciones utilizando pattern matching
 (no usar las funciones sobre booleanos ya definidas en Haskell):-}
@@ -182,14 +182,11 @@ tipo (Pk t _) = t
 
 -- 4.2.b Devuelve la cantidad de Pokémon de determinado tipo que posee el entrenador.
 cantidadDePokemonDe :: TipoDePokemon -> Entrenador -> Int
-cantidadDePokemonDe t (E _ p1 p2) = boolANro (esDeTipo t p1) + boolANro (esDeTipo t p1)
+cantidadDePokemonDe t (E _ p1 p2) = boolANro (esDeMismoTipo t (tipo p1)) + boolANro (esDeMismoTipo t (tipo p1))
 
 boolANro :: Bool -> Int
 boolANro True = 1
 boolANro _ = 0
-
-esDeTipo :: TipoDePokemon -> Pokemon -> Bool
-esDeTipo tt (Pk t _) = esDeMismoTipo tt t
 
 esDeMismoTipo :: TipoDePokemon -> TipoDePokemon -> Bool
 esDeMismoTipo Agua Agua = True
