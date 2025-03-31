@@ -182,7 +182,7 @@ tipo (Pk t _) = t
 
 -- 4.2.b Devuelve la cantidad de Pokémon de determinado tipo que posee el entrenador.
 cantidadDePokemonDe :: TipoDePokemon -> Entrenador -> Int
-cantidadDePokemonDe t (E _ p1 p2) = boolANro (esDeMismoTipo t (tipo p1)) + boolANro (esDeMismoTipo t (tipo p1))
+cantidadDePokemonDe t (E _ p1 p2) = boolANro (esDeMismoTipo t (tipo p1)) + boolANro (esDeMismoTipo t (tipo p2))
 
 boolANro :: Bool -> Int
 boolANro True = 1
