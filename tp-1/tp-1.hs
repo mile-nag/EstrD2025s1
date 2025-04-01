@@ -106,7 +106,7 @@ estaEnElMedio _ = True
 -- 3.3.a Dado un booleano, si es True devuelve False, y si es False devuelve True. En Haskell ya está definida como not.
 negar :: Bool -> Bool
 negar True = False
-negar _ = True
+negar False = True
 
 -- 3.3.b Dados dos booleanos, si el primero es True y el segundo es False, devuelve False, sino devuelve True. Esta función NO debe realizar doble pattern matching. Nota: no viene implementada en Haskell.
 implica :: Bool -> Bool -> Bool
@@ -115,13 +115,13 @@ implica False _ = True
 
 -- 3.3.c Dados dos booleanos si ambos son True devuelve True, sino devuelve False. Esta función NO debe realizar doble pattern matching.
 yTambien :: Bool -> Bool -> Bool
-yTambien True a = a
+yTambien True b = b
 yTambien False _ = False
 
 -- 3.3.d Dados dos booleanos si alguno de ellos es True devuelve True, sino devuelve False. Esta función NO debe realizar doble pattern matching. En Haskell ya está definida como ||.
 oBien :: Bool -> Bool -> Bool
 oBien False b = b
-oBien True b = True
+oBien True _ = True
 
 -- 4. Registros
 
