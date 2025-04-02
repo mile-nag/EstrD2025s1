@@ -1,11 +1,3 @@
-{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
-
-{-# HLINT ignore "Use foldr" #-}
-{-# HLINT ignore "Use map" #-}
-{-# HLINT ignore "Use camelCase" #-}
-{-# HLINT ignore "Use newtype instead of data" #-}
-{-# HLINT ignore "Eta reduce" #-}
-
 -- 1. Recursión sobre listas
 
 -- Defina las siguientes funciones utilizando recursión estructural sobre listas, salvo que se indique lo contrario:
