@@ -103,10 +103,13 @@ factorial :: Int -> Int
 factorial 0 = 1
 factorial n = n * factorial (n - 1)
 
--- 2.2 Dado un número n devuelve una lista cuyos elementos sean los números comprendidos entre n y 1 (incluidos). Si el número es inferior a 1, devuelve la lista vacía.
+-- 2.2 Dado un número n devuelve una lista cuyos elementos sean los números comprendidos entre n y 1 (incluidos).
+-- Si el número es inferior a 1, devuelve la lista vacía.
 cuentaRegresiva :: Int -> [Int]
-cuentaRegresiva 0 = []
-cuentaRegresiva n = n : cuentaRegresiva (n - 1)
+cuentaRegresiva n =
+  if n > 0
+    then n : cuentaRegresiva (n - 1)
+    else []
 
 -- 2.3 Dado un número n y un elemento e devuelve una lista en la que el elemento e repite n veces.
 repetir :: Int -> a -> [a]
@@ -285,6 +288,35 @@ data Rol = Developer Seniority Proyecto | Management Seniority Proyecto
 data Empresa = ConsEmpresa [Rol]
   deriving (Show)
 
+-- Proyectos
+projectWeb :: Proyecto
+projectWeb = ConsProyecto "Web Development"
+
+projectMobile :: Proyecto
+projectMobile = ConsProyecto "Mobile App"
+
+-- Roles
+roleJuniorDeveloperWeb :: Rol
+roleJuniorDeveloperWeb = Developer Junior projectWeb
+
+roleSeniorDeveloperMobile :: Rol
+roleSeniorDeveloperMobile = Developer Senior projectMobile
+
+roleManagement :: Rol
+roleManagement = Management SemiSenior projectWeb
+
+-- Empresa
+company :: Empresa
+company = ConsEmpresa [roleJuniorDeveloperWeb, roleSeniorDeveloperMobile, roleManagement, roleJuniorDeveloperWeb, roleSeniorDeveloperMobile]
+
+kraft = ConsEmpresa [Developer Junior vimar, Developer Senior vimar, Management SemiSenior vimar, Management Junior tupper, Developer Senior tupper, Developer Junior tupper, Management SemiSenior pans]
+
+vimar = ConsProyecto "Vimar"
+
+tupper = ConsProyecto "Tupper"
+
+pans = ConsProyecto "Pozo"
+
 -- Definir las siguientes funciones sobre el tipo Empresa:
 
 -- 3.1.a Dada una empresa denota la lista de proyectos en los que trabaja, sin elementos repetidos.
@@ -298,7 +330,7 @@ proyectos' (r : rs) = agregarALaLista (proyecto r) (proyectos' rs)
 
 agregarALaLista :: Proyecto -> [Proyecto] -> [Proyecto]
 agregarALaLista p ps =
-  if proyectoPerteneceALaLista p ps
+  if not (proyectoPerteneceALaLista p ps)
     then p : ps
     else ps
 

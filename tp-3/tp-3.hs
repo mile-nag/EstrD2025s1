@@ -1,8 +1,3 @@
-{-# HLINT ignore "Use foldr" #-}
-{-# OPTIONS_GHC -Wno-overlapping-patterns #-}
-{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
-
-{-# HLINT ignore "Use map" #-}
 -- 1. Tipos recursivos simples
 
 -- 1.1. Celdas con bolitas: Representaremos una celda con bolitas de colores rojas y azules, de la siguiente manera:
@@ -33,7 +28,7 @@ nroBolitas c (Bolita color celda) = unoSi (esElMismoColor c color) + nroBolitas 
 
 unoSi :: Bool -> Int
 unoSi True = 1
-unoSi False = 0
+unoSi _ = 0
 
 esElMismoColor :: Color -> Color -> Bool
 esElMismoColor Rojo Rojo = True
