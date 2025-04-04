@@ -351,39 +351,21 @@ simplificar (Sum exp1 exp2) = simplificarSuma (simplificar exp1) (simplificar ex
 simplificar (Prod exp1 exp2) = simplificarProducto (simplificar exp1) (simplificar exp2)
 simplificar (Neg exp) = simplificarNegacion (simplificar exp)
 
--- simplificar la suma
 simplificarSuma :: ExpA -> ExpA -> ExpA
-simplificarSuma exp1 exp2 =
-  if esCero exp1
-    then exp2
-    else
-      if esCero exp2
-        then exp1
-        else Sum exp1 exp2
+simplificarSuma (Valor 0) exp2 = exp2
+simplificarSuma exp1 (Valor 0) = exp1
+simplificarSuma (Valor x) (Valor y) = Valor (x + y)
+simplificarSuma exp1 exp2 = Sum exp1 exp2
 
--- simplificar el producto
 simplificarProducto :: ExpA -> ExpA -> ExpA
-simplificarProducto exp1 exp2 =
-  if esCero exp1 || esCero exp2
-    then Valor 0
-    else
-      if esUno exp1
-        then exp2
-        else
-          if esUno exp2
-            then exp1
-            else Prod exp1 exp2
+simplificarProducto (Valor 0) _ = Valor 0
+simplificarProducto _ (Valor 0) = Valor 0
+simplificarProducto (Valor 1) exp2 = exp2
+simplificarProducto exp1 (Valor 1) = exp1
+simplificarProducto (Valor x) (Valor y) = Valor (x * y)
+simplificarProducto exp1 exp2 = Prod exp1 exp2
 
--- simplificar la negación
 simplificarNegacion :: ExpA -> ExpA
-simplificarNegacion (Neg (Neg exp)) = exp
-
--- determinar si una expresión es 0
-esCero :: ExpA -> Bool
-esCero (Valor 0) = True
-esCero _ = False
-
--- determinar si una expresión es 1
-esUno :: ExpA -> Bool
-esUno (Valor 1) = True
-esUno _ = False
+simplificarNegacion (Valor x) = Valor (-x)
+simplificarNegacion (Neg exp) = exp
+simplificarNegacion exp = Neg exp
