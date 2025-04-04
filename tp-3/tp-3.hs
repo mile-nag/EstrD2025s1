@@ -344,6 +344,7 @@ eval (Prod exp1 exp2) = eval exp1 * eval exp2
   c) 1 * x = x * 1 = x
   d) - (- x) = x
 -}
+nro25 = Sum (Sum (Valor 2) (Valor 3)) (Prod (Valor 0) (Sum (Valor 2) (Valor 3)))
 
 simplificar :: ExpA -> ExpA
 simplificar (Valor n) = Valor n
@@ -354,7 +355,6 @@ simplificar (Neg exp) = simplificarNegacion (simplificar exp)
 simplificarSuma :: ExpA -> ExpA -> ExpA
 simplificarSuma (Valor 0) exp2 = exp2
 simplificarSuma exp1 (Valor 0) = exp1
-simplificarSuma (Valor x) (Valor y) = Valor (x + y)
 simplificarSuma exp1 exp2 = Sum exp1 exp2
 
 simplificarProducto :: ExpA -> ExpA -> ExpA
@@ -362,7 +362,6 @@ simplificarProducto (Valor 0) _ = Valor 0
 simplificarProducto _ (Valor 0) = Valor 0
 simplificarProducto (Valor 1) exp2 = exp2
 simplificarProducto exp1 (Valor 1) = exp1
-simplificarProducto (Valor x) (Valor y) = Valor (x * y)
 simplificarProducto exp1 exp2 = Prod exp1 exp2
 
 simplificarNegacion :: ExpA -> ExpA
