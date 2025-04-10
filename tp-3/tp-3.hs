@@ -344,27 +344,26 @@ eval (Prod exp1 exp2) = eval exp1 * eval exp2
   c) 1 * x = x * 1 = x
   d) - (- x) = x
 -}
-nro25 = Sum (Sum (Valor 2) (Valor 3)) (Prod (Valor 0) (Sum (Valor 2) (Valor 3)))
+nro = Sum (Sum (Valor 2) (Valor 3)) (Prod (Valor 0) (Sum (Valor 2) (Valor 3)))
 
 simplificar :: ExpA -> ExpA
-simplificar (Valor n) = Valor n
-simplificar (Sum exp1 exp2) = simplificarSuma (simplificar exp1) (simplificar exp2)
-simplificar (Prod exp1 exp2) = simplificarProducto (simplificar exp1) (simplificar exp2)
-simplificar (Neg exp) = simplificarNegacion (simplificar exp)
+simplificar (Prod e1 e2) = simplificarProd (simplificar e1) (simplificar e2)
+simplificar (Sum e1 e2) = simplificarSum (simplificar e1) (simplificar e2)
+simplificar (Neg exp) = simplificarNeg (simplificar exp)
+simplificar exp = exp
 
-simplificarSuma :: ExpA -> ExpA -> ExpA
-simplificarSuma (Valor 0) exp2 = exp2
-simplificarSuma exp1 (Valor 0) = exp1
-simplificarSuma exp1 exp2 = Sum exp1 exp2
+simplificarSum :: ExpA -> ExpA -> ExpA
+simplificarSum exp (Valor 0) = exp
+simplificarSum (Valor 0) exp = exp
+simplificarSum exp expp = Sum exp expp
 
-simplificarProducto :: ExpA -> ExpA -> ExpA
-simplificarProducto (Valor 0) _ = Valor 0
-simplificarProducto _ (Valor 0) = Valor 0
-simplificarProducto (Valor 1) exp2 = exp2
-simplificarProducto exp1 (Valor 1) = exp1
-simplificarProducto exp1 exp2 = Prod exp1 exp2
+simplificarProd :: ExpA -> ExpA -> ExpA
+simplificarProd _ (Valor 0) = Valor 0
+simplificarProd (Valor 0) _ = Valor 0
+simplificarProd exp (Valor 1) = exp
+simplificarProd (Valor 1) e = e
+simplificarProd exp expp = Prod exp expp
 
-simplificarNegacion :: ExpA -> ExpA
-simplificarNegacion (Valor x) = Valor (-x)
-simplificarNegacion (Neg exp) = exp
-simplificarNegacion exp = Neg exp
+simplificarNeg :: ExpA -> ExpA
+simplificarNeg (Neg exp) = exp
+simplificarNeg exp = Neg exp
