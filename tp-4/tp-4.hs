@@ -1,13 +1,5 @@
 -- 1. Pizzas
 -- Tenemos los siguientes tipos de datos:
-{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
-
-{-# HLINT ignore "Use camelCase" #-}
-{-# HLINT ignore "Use list comprehension" #-}
-{-# HLINT ignore "Eta reduce" #-}
-{-# HLINT ignore "Use foldr" #-}
-{-# HLINT ignore "Use map" #-}
-{-# HLINT ignore "Use newtype instead of data" #-}
 data Pizza
   = Prepizza
   | Capa Ingrediente Pizza
@@ -74,8 +66,6 @@ cantCapasPorPizza :: [Pizza] -> [(Int, Pizza)]
 cantCapasPorPizza [] = []
 cantCapasPorPizza (p : ps) = (cantidadDeCapas p, p) : cantCapasPorPizza ps
 
--- ----------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 -- 2. Mapa de tesoros (con bifurcaciones)
 -- Un mapa de tesoros es un árbol con bifurcaciones que terminan en cofres. Cada bifurcación y cada cofre tiene un objeto, que puede ser chatarra o un tesoro.
 
@@ -141,10 +131,13 @@ seguirMapa Der _ m2 = m2
 -- Indica el camino al tesoro. Precondición: existe un tesoro y es único.
 caminoAlTesoro :: Mapa -> [Dir]
 caminoAlTesoro (Fin _) = []
-caminoAlTesoro (Bifurcacion _ m1 m2) =
-  if hayTesoro m1
-    then Izq : caminoAlTesoro m1
-    else Der : caminoAlTesoro m2
+caminoAlTesoro (Bifurcacion cofre m1 m2) =
+  if hayTesoroAca (objetosDelCofre cofre)
+    then []
+    else
+      if hayTesoro m1
+        then Izq : caminoAlTesoro m1
+        else Der : caminoAlTesoro m2
 
 mapa5 :: Mapa
 mapa5 =
@@ -165,16 +158,35 @@ mapa5 =
         )
     )
 
+m :: Mapa
+m =
+  Bifurcacion
+    (Cofre [])
+    (Fin (Cofre []))
+    ( Bifurcacion
+        (Cofre [])
+        (Fin (Cofre [Chatarra]))
+        ( Bifurcacion
+            (Cofre [])
+            (Fin (Cofre []))
+            ( Bifurcacion
+                (Cofre [])
+                (Fin (Cofre [Chatarra]))
+                (Fin (Cofre []))
+            )
+        )
+    )
+
 {-
-                                            Bifurcacion C tesoro
-                                            /                 \
-                                    Fin c []                 Bifurcacion c tesoro
-                                                              /                \
-                                                        Fin c chat         Bifurcacion c tesoro
-                                                                            /                 \
-                                                                         Fin c []         Bifurcacion c tesoro
-                                                                                          /                  \
-                                                                                        Fin                  Fin
+         Bifurcacion C tesoro
+         /                 \
+ Fin c []                 Bifurcacion c tesoro
+                           /                \
+                     Fin c chat         Bifurcacion c tesoro
+                                         /                 \
+                                      Fin c []         Bifurcacion c tesoro
+                                                       /                  \
+                                                     Fin                  Fin
 -}
 -- Indica el camino de la rama más larga.
 caminoDeLaRamaMasLarga :: Mapa -> [Dir]
@@ -493,19 +505,19 @@ nave4 =
 -- Propósito: Incorpora un tripulante a una lista de sectores de la nave.
 -- Precondición: Todos los id de la lista existen en la nave.
 asignarTripulanteA :: Tripulante -> [SectorId] -> Nave -> Nave
-asignarTripulanteA t ss (N sectores) = N (asignarTripulanteAT t ss sectores)
+asignarTripulanteA t sids (N sectores) = N (asignarTripulanteAT t sids sectores)
 
 asignarTripulanteAT :: Tripulante -> [SectorId] -> Tree Sector -> Tree Sector
-asignarTripulanteAT t ss EmptyT = EmptyT
-asignarTripulanteAT t ss (NodeT s si sd) =
+asignarTripulanteAT t sids EmptyT = EmptyT
+asignarTripulanteAT t sids (NodeT s si sd) =
   NodeT
-    (agregarTripulanteASector t ss s)
-    (asignarTripulanteAT t ss si)
-    (asignarTripulanteAT t ss sd)
+    (agregarTripulanteASector t sids s)
+    (asignarTripulanteAT t sids si)
+    (asignarTripulanteAT t sids sd)
 
 agregarTripulanteASector :: Tripulante -> [SectorId] -> Sector -> Sector
-agregarTripulanteASector t ss (S id comps trips) =
-  if id `elem` ss
+agregarTripulanteASector t sids (S id comps trips) =
+  if id `elem` sids
     then S id comps (t : trips)
     else S id comps trips
 

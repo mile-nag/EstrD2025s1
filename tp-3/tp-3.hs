@@ -156,8 +156,12 @@ alMenosNTesoros n camino = cantDeTesorosTotales camino >= n
 
 cantDeTesorosTotales :: Camino -> Int
 cantDeTesorosTotales Fin = 0
-cantDeTesorosTotales (Nada camino) = cantDeTesorosTotales camino
-cantDeTesorosTotales (Cofre objs camino) = unoSi (hayUnTesoroEn objs) + cantDeTesorosTotales camino
+cantDeTesorosTotales (Nada c) = cantDeTesorosTotales c
+cantDeTesorosTotales (Cofre obj c) = cantDeTesoros obj + cantDeTesorosTotales c
+
+cantDeTesoros :: [Objeto] -> Int
+cantDeTesoros [] = 0
+cantDeTesoros (o : os) = unoSi (esTesoro o) + cantDeTesoros os
 
 {-
 (desafío) cantTesorosEntre :: Int -> Int -> Camino -> Int
@@ -165,6 +169,21 @@ Dado un rango de pasos, indica la cantidad de tesoros que hay en ese rango. Por 
 el rango es 3 y 5, indica la cantidad de tesoros que hay entre hacer 3 pasos y hacer 5. Están
 incluidos tanto 3 como 5 en el resultado.
 -}
+cantTesorosEntre :: Int -> Int -> Camino -> Int
+cantTesorosEntre i j Fin = 0
+cantTesorosEntre 0 j c = cantTesorosHasta j c
+cantTesorosEntre i j (Nada c) = cantTesorosEntre (i - 1) (j - 1) c
+cantTesorosEntre i j (Cofre obs c) = cantTesorosEntre (i - 1) (j - 1) c
+
+cantTesorosHasta :: Int -> Camino -> Int
+cantTesorosHasta 0 c = cantTesorosEnCamino c
+cantTesorosHasta i Fin = 0
+cantTesorosHasta i (Nada c) = cantTesorosHasta (i - 1) c
+cantTesorosHasta i (Cofre obs c) = cantDeTesoros obs + cantTesorosHasta (i - 1) c
+
+cantTesorosEnCamino :: Camino -> Int
+cantTesorosEnCamino (Cofre obs _) = cantDeTesoros obs
+cantTesorosEnCamino _ = 0
 
 -- 2. Tipos arbóreos
 -- 2.1. Árboles binarios
