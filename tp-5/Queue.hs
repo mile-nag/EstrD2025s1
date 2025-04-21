@@ -36,11 +36,11 @@ enqueue' x (y : ys) = y : enqueue' x ys
 -- Dada una cola devuelve el primer elemento de la cola.
 -- O(1)
 firstQ :: Queue a -> a
-firstQ (Q []) = error "No existen elementos en la cola."
+-- PARCIAL: la cola no es vacía
 firstQ (Q lista) = head lista
 
 -- Dada una cola la devuelve sin su primer elemento.
 -- O(1)
 dequeue :: Queue a -> Queue a
-dequeue (Q []) = error "No existen elementos en la cola"
+-- PARCIAL: la cola no es vacía
 dequeue (Q lista) = Q (tail lista)

@@ -13,8 +13,7 @@ emptyQ = Q []
 -- Dada una cola indica si la cola está vacía.
 -- O(1)
 isEmptyQ :: Queue a -> Bool
-isEmptyQ (Q []) = True
-isEmptyQ _ = False
+isEmptyQ (Q xs) = null xs
 
 -- Dados un elemento y una cola, agrega ese elemento a la cola.
 -- O(1)
