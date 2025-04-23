@@ -22,8 +22,7 @@ emptyS = S [] 0
 -- Dada una pila indica si está vacía.
 -- O(1)
 isEmptyS :: Stack a -> Bool
-isEmptyS (S [] _) = True
-isEmptyS _ = False
+isEmptyS (S lista _) = null lista
 
 -- Dados un elemento y una pila, agrega el elemento a la pila.
 -- O(1)
