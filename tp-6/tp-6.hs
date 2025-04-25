@@ -1,11 +1,7 @@
-{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
-
-{-# HLINT ignore "Use map" #-}
-{-# HLINT ignore "Use foldr" #-}
-{-# HLINT ignore "Use uncurry" #-}
-
 import Data.Maybe (fromJust)
+import MultiSet ( MultiSet, emptyMS, addMS, multiSetToList )
 import MapV1 (Map, assocM, deleteM, emptyM, keys, lookupM)
+-- import MapV2 (Map, assocM, deleteM, emptyM, keys, lookupM)
 import PriorityQueue (PriorityQueue, deleteMinPQ, emptyPQ, findMinPQ, insertPQ, isEmptyPQ)
 
 {-
@@ -23,12 +19,10 @@ import PriorityQueue (PriorityQueue, deleteMinPQ, emptyPQ, findMinPQ, insertPQ, 
 -- construirPQ O(n^2)
 -- obtenerTodos O(n)
 -- heapSort utiliza las dos operaciones, se realizan una despues de la otra y no dependen entre sí
--- El costo final de esta operacion es: O(n^2 + n) = O(n^2) ya que el n es absorbido por el mayor costo.
+-- El costo final de esta operacion es: O(n^2 + n) = O(n^2) ya que el n es desestimado por ser menor.
 
 heapSort :: (Ord a) => [a] -> [a]
-heapSort xs =
-  let pq = construirPQ xs
-   in obtenerTodos pq
+heapSort xs = obtenerTodos (construirPQ xs)
 
 -- emptyPQ O(1)
 -- insertPQ es O(n) en el peor caso, donde k es el tamaño actual de la PQ
@@ -46,10 +40,7 @@ obtenerTodos :: (Ord a) => PriorityQueue a -> [a]
 obtenerTodos pq =
   if isEmptyPQ pq
     then []
-    else
-      let m = findMinPQ pq
-          pq' = deleteMinPQ pq
-       in m : obtenerTodos pq'
+    else findMinPQ pq : obtenerTodos (deleteMinPQ pq)
 
 -- ---------------------------------------------------------------------------------------------------------------------------
 
@@ -77,7 +68,7 @@ valuesM' (k : ks) map = lookupM k map : valuesM' ks map
    pares clave-valor del map
  * La función auxiliar valuesM' recorre la lista de claves (la lista [k] tiene la misma cantidad de elementos que el map -> m elementos)
    y por cada una realiza una operación lookupM, que también tiene costo O(m) en una representación como lista de pares
- * Por lo tanto, el costo total es O(m^2): se hacen m llamadas (una por cada clave) y cada llamada cuesta O(m)                            -}
+ * Por lo tanto, el costo total es O(m^2) + O(m) = O(m^2): se hacen m llamadas (una por cada clave) y cada llamada cuesta O(m)                            -}
 
 -- Propósito: indica si en el map se encuentran todas las claves dadas.
 todasAsociadas :: (Eq k) => [k] -> Map k v -> Bool
@@ -102,12 +93,12 @@ listToMap (kv : kvs) = assocM (fst kv) (snd kv) (listToMap kvs)
    lista de pares clave-valor pasada como argumento).
  * En cada paso recursivo se llama a assocM sobre un map de tamaño creciente (desde 0 hasta n−1), siendo n la cantidad de pares en la lista.
  * Por lo tanto, el costo total es la suma:
-    - en la 1° llamada se ejecuta assocM sobre un map de tamaño 0 → costo O(0)
+    - en la 1° llamada se ejecuta assocM sobre un map de tamaño 0 -> costo O(0)
     - en la 2° sobre uno de tamaño 1 -> costo O(1)
     - en la 3° sobre uno de tamaño 2 -> costo O(2)
     - ...
     - en la n-ésima sobre un map de tamaño n-1 -> costo O(n−1)
-    => Entonces: O(0 + 1 + 2 + ... + n−1) = O(n²).                                                                                         -}
+    => Entonces: O(0 + 1 + 2 + ... + n−1) = O(n^2).                                                                                         -}
 
 -- Propósito: convierte un map en una lista de pares clave valor.
 mapToList :: (Eq k) => Map k v -> [(k, v)]
@@ -163,17 +154,15 @@ mergeMaps map1 map2 = mergeMaps' (keys map1) map1 map2
 mergeMaps' :: (Eq k) => [k] -> Map k v -> Map k v -> Map k v
 mergeMaps' [] _ map2 = map2 
 mergeMaps' (k : ks) map1 map2 = mergeMaps' ks map1 (assocM k (fromJust (lookupM k map1)) map2)
-
+                            -- 
 {- Análisis de costos mergeMaps:
- * La función principal realiza un keys con un costo O(m) siendo m la cantidad de elementos del map1
- * En la función auxiliar se realiza un llamado m veces, siendo m la cantidad de elementos del map1
-   (es la lista que viene de keys map1)
- * En cada llamado se realiza un llamado a assocM con un costo de O(n) siendo n la cantidad de elemntos en el map2
-   y un lookup que cuesta O(m) siendo m la cantidad de elementos del map1
-   -> cada llamado cuesta O (n^2 + n*m ) (es lo mismo que O(n * (n + m)))
- * El costo final de la función principal sería O((n^2 + n*m) + n),
-   sabemos que el costo de keys es el mas chico entonces se desestima
- => El costo final de esta operación es de:  O(n^2 + n*m)                                                             -}
+ * keys map1: devuelve una lista de claves de map1, y su costo es O(m) (m = tamaño de map1).
+ * mergeMaps' se llama m veces (una por cada clave)
+ * En cada llamada:  
+   - lookupM k map1: se hace para obtener el valor correspondiente a k y tiene un costo O(m)
+   - assocM k v map2: de costo es O(n) si map2 tamaño n
+ * Cada iteración cuesta O(m + n) (por el lookup y el assoc) y esto se hace m veces
+ => El costo final de esta operación es de:  O(m*(m+n)) = O(m^2+m*n)                       -}
 
 m1 :: Map Int String
 m1 = assocM 1 "uno" (assocM 2 "dos" (assocM 3 "tres" (assocM 4 "cuatro" (assocM 5 "cinco" emptyM))))
@@ -253,3 +242,26 @@ ocurrencias' (c : cs) map =
 
 m6 :: Map String Int
 m6 = assocM "a" 2 (assocM "b" 2 (assocM "c" 2 (assocM "d" 2 emptyM)))
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+{-
+    >> MultiSet
+    emptyMS :: MultiSet a
+    addMS :: Ord a => a -> MultiSet a -> MultiSet a
+    ocurrencesMS :: Ord a => a -> MultiSet a -> Int
+    unionMS :: Ord a => MultiSet a -> MultiSet a -> MultiSet a (opcional)
+    intersectionMS :: Ord a => MultiSet a -> MultiSet a -> MultiSet a (opcional)
+    multiSetToList :: MultiSet a -> [(a, Int)]
+-}
+
+
+ocurrenciasMS :: String -> Map Char Int
+ocurrenciasMS str = listToMap (multiSetToList (stringToMultiSet str))
+
+-- Función auxiliar que convierte un String en un MultiSet de Char
+stringToMultiSet :: String -> MultiSet Char
+stringToMultiSet [] = emptyMS
+stringToMultiSet (c:cs) = addMS c (stringToMultiSet cs)
+
+

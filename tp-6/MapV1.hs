@@ -3,8 +3,7 @@
 
 module MapV1 (Map, emptyM, assocM, lookupM, deleteM, keys) where
 
-data Map k v = M [(k, v)] -- clave, valor
-
+data Map k v = M [(k, v)] -- clave, valor 
 {-
     INV. REP.: En Map [(clave, valor)]
     - En la lista de pares (clave, valor) que representa el Map, no existen dos pares con la misma clave.
