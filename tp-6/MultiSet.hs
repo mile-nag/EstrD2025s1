@@ -36,8 +36,7 @@ unionMS (MS m1) (MS m2) = MS (unionMS' (mapToList m1) m2)
 unionMS' :: (Ord a) => [(a, Int)] -> Map a Int -> Map a Int
 unionMS' [] m = m
 unionMS' (ki : kis) m =
-  let k = fst ki
-      i = snd ki
+  let (k, i) = ki
       lk = lookupM k m
    in if isNothing lk
         then assocM k i (unionMS' kis m)
@@ -51,8 +50,7 @@ intersectionMS (MS m1) (MS m2) = MS (intersectionMS' (mapToList m1) m2)
 intersectionMS' :: (Ord a) => [(a, Int)] -> Map a Int -> Map a Int
 intersectionMS' [] m = emptyM
 intersectionMS' (ki : kis) m =
-  let k = fst ki
-      i = snd ki
+  let (k, i) = ki
       lk = lookupM k m
    in if isNothing lk
         then intersectionMS' kis m

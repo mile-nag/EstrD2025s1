@@ -144,7 +144,7 @@ incrementar :: (Eq k) => [k] -> Map k Int -> Map k Int
 incrementar [] map = map
 incrementar (k : ks) map = case lookupM k map of
   Just v -> assocM k (v + 1) (incrementar ks map)
-  Nothing -> incrementar ks map 
+  Nothing -> incrementar ks map
 
 -- Propósito: dado dos maps se agregan las claves y valores del primer map en el segundo.
 -- Si una clave del primero existe en el segundo, es reemplazada por la del primero.
@@ -152,8 +152,8 @@ mergeMaps :: (Eq k) => Map k v -> Map k v -> Map k v
 mergeMaps map1 map2 = mergeMaps' (keys map1) map1 map2
 
 mergeMaps' :: (Eq k) => [k] -> Map k v -> Map k v -> Map k v
-mergeMaps' [] _ map2 = map2 
-mergeMaps' (k : ks) map1 map2 = mergeMaps' ks map1 (assocM k (fromJust (lookupM k map1)) map2)
+mergeMaps' [] _ map2 = map2
+mergeMaps' (k : ks) map1 map2 = assocM k (fromJust (lookupM k map1)) (mergeMaps' ks map1 map2)
                             -- 
 {- Análisis de costos mergeMaps:
  * keys map1: devuelve una lista de claves de map1, y su costo es O(m) (m = tamaño de map1).
@@ -214,7 +214,7 @@ indexar xs = indexar' xs 0 emptyM
 
 indexar' :: [a] -> Int -> Map Int a -> Map Int a
 indexar' [] _ map = map
-indexar' (x : xs) i map = indexar' xs (i + 1) (assocM i x map)
+indexar' (x : xs) i map =  assocM i x (indexar' xs (i + 1) map)
 
 {- ** Justificación de costos: indexar
   - assocM tiene costo O(n), donde n es la cantidad de claves en el Map actual
@@ -230,8 +230,8 @@ ocurrencias' :: String -> Map Char Int -> Map Char Int
 ocurrencias' [] map = map
 ocurrencias' (c : cs) map =
   case lookupM c map of
-    Just v -> ocurrencias' cs (assocM c (v + 1) map)
-    Nothing -> ocurrencias' cs (assocM c 1 map)
+    Just v -> assocM c (v + 1) ( ocurrencias' cs map)     -- ocurrencias' cs (assocM c (v + 1) map)
+    Nothing -> assocM c 1 (ocurrencias' cs map)           -- ocurrencias' cs (assocM c 1 map)
 
 {- ** Justificación de costos: ocurrencias 
   - Por cada carácter:
@@ -243,25 +243,5 @@ ocurrencias' (c : cs) map =
 m6 :: Map String Int
 m6 = assocM "a" 2 (assocM "b" 2 (assocM "c" 2 (assocM "d" 2 emptyM)))
 
-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-{-
-    >> MultiSet
-    emptyMS :: MultiSet a
-    addMS :: Ord a => a -> MultiSet a -> MultiSet a
-    ocurrencesMS :: Ord a => a -> MultiSet a -> Int
-    unionMS :: Ord a => MultiSet a -> MultiSet a -> MultiSet a (opcional)
-    intersectionMS :: Ord a => MultiSet a -> MultiSet a -> MultiSet a (opcional)
-    multiSetToList :: MultiSet a -> [(a, Int)]
--}
-
-
-ocurrenciasMS :: String -> Map Char Int
-ocurrenciasMS str = listToMap (multiSetToList (stringToMultiSet str))
-
--- Función auxiliar que convierte un String en un MultiSet de Char
-stringToMultiSet :: String -> MultiSet Char
-stringToMultiSet [] = emptyMS
-stringToMultiSet (c:cs) = addMS c (stringToMultiSet cs)
 
 
