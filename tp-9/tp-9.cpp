@@ -95,26 +95,14 @@ void desdeCeroHastaN(int n){
     for (int i = 0; i <= n ; i++){
         cout << i << endl;
     }
-    cout << "Fin I"<< endl;
 }
 
-void desdeCeroHastaNR(int n, int c){
-    int contador = c;
-    if (n>=0){
-        cout << contador << endl;
-        contador++;
-        // desdeCeroHastaNR(???);
-    } else {
-        cout << "Fin R"<< endl;
+void desdeCeroHastaNR(int n) {
+    if(n>0){
+        desdeCeroHastaNR(n-1);
     }
-}
 
-int contador(int n, int m){
-    if (n == n){
-        return 0;
-    }else{
-        return m+1;
-    }
+    cout<< n << endl;
 }
 
 // Propósito: realiza la multiplicación entre dos números (sin utilizar la operación * de C++).
@@ -128,43 +116,59 @@ int mult(int n, int m) {
 }
 
 int multR(int n, int m) {
-    if (n == 0) {
-        return 0;
-    }
-    return m + mult(n - 1, m);
+    return n == 0 || m==0 ? 0 : m + multR(n - 1, m);
 }
 
 // Propósito: imprime los primeros n char del string s, separados por un salto de línea. 
 // Precondición: el string tiene al menos n char.
 void primerosN(int n, string s){
-   
     for (int i = 0; i < n; i++){
         cout << s[i] << endl;
     }
     cout << "Fin I" << endl;
 }
 
-void primerosNR(int n, string s){
-   
+void primerosNR(int n, string s) {
+    if (n > 0) {
+        primerosNR(n - 1, s);
+        cout << s[n] << endl;
+    }
 }
 
 // Propósito: indica si un char c aparece en el string s.
-bool pertenece(char c, string s){
-     for (int i = 0; i < s.length(); i++) {
-        if (s[i] == c) {
-            return true;
-        }
+bool pertenece(char c, string s) {
+    bool esta = false;
+    for (int i = 0; s[i] != '\0'; i++) {
+        esta = esta || (s[i] == c);
     }
-    return false;
-}   
-
-bool perteneceR(char c, string s) {
-    cout << " no sé " << endl;
+    return esta;
 }
 
+bool perteneceAux(char c, string s, int i) {
+    return (s[i] != '\0') && ((s[i] == c) || perteneceAux(c, s, i + 1));
+}
 
-/* 
+bool perteneceR(char c, string s) {
+    return perteneceAux(c, s, 0);
+}
+
 // Propósito: devuelve la cantidad de apariciones de un char c en el string s.
-int apariciones(char c, string s)
-*/
+int apariciones(char c, string s){
+    int result = 0;
+    for (int i = 0; s[i] != '\0'; i++){
+        if (s[i] == c) {
+            result++;
+        }
+    }
+    return result;
+}
+
+int aparicionesAux(char c, string s, int i) {
+    int suma = (s[i] == c) ? 1 : 0;
+    return suma + aparicionesAux(c, s, i + 1);
+}
+
+int aparicionesR(char c, string s) {
+    return aparicionesAux(c, s, 0);
+}
 
