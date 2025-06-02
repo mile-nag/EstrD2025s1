@@ -1,7 +1,11 @@
 #include <iostream>
 using namespace std;
 
-struct PersonaSt;
+struct PersonaSt{
+    string nombre;
+    int edad;
+};
+
 typedef PersonaSt* Persona;
 
 // Devuelve a una persona nueva, con el nombre y la edad dados
