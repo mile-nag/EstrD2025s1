@@ -36,15 +36,16 @@ void Sucesores(LinkedList xs){ // O(N)
 
 // Indica si el elemento pertenece a la lista.
 bool pertenece(int x, LinkedList xs){ // O(N)
-    ListIterator i = getIterator(xs);
+    ListIterator i = getIterator(xs); 
 
-    bool encontrado = false;
-    while(!atEnd(i) && !encontrado){ //PRESTAR ATENCÓN -> Short circuit
-        encontrado = (x == current(i));
+    while(!atEnd(i) && !(x == current(i))){ //PRESTAR ATENCÓN -> Short circuit
         Next(i);
     }
 
+    bool encontrado = x == current(i);
+
     DisposeIterator(i);
+
     return encontrado;
 }
 /* Justificación de costos pertenece(int x, LinkedList xs):

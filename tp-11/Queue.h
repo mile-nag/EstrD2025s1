@@ -11,6 +11,12 @@ struct QueueSt {
 
 typedef QueueSt* Queue;
 
+/* INV. REP.: 
+ * Si primero es NULL, último también es NULL
+ * cantidad indica los elementos existentes en la queue hasta llegar al puntero que es NULL 
+ * último->siguiente siempre apunta a NULL
+*/
+
 // Definir la siguiente interfaz de este tipo de colas, respetando el costo de las operaciones:
 
 // Crea una cola vacía. Costo: O(1).
