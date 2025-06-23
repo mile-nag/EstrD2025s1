@@ -14,7 +14,7 @@ int sumarT(Tree t){
 // Dado un árbol binario devuelve su cantidad de elementos, es decir, el tamaño del árbol (size en inglés).
 int sizeT(Tree t){
     if (isEmptyT(t)) return 0;
-    return 1 + max(heightT(left(t)), heightT(right(t)));
+    return 1 + sizeT(left(t)) + sizeT(right(t));
 }
 
 // Dados un elemento y un árbol binario devuelve True si existe un elemento igual a ese en el árbol.
@@ -45,6 +45,7 @@ int heightT(Tree t){
     return 1 + max(heightT(left(t)), heightT(right(t)));
 }
 
+
 // AUX.: Agrega en orden los elementos del árbol dado a la lista 
 void AgregarElementos(Tree t, ArrayList xs){
     if(!isEmptyT(t)){
@@ -56,7 +57,7 @@ void AgregarElementos(Tree t, ArrayList xs){
 
 // Dado un árbol devuelve una lista con todos sus elementos.
 ArrayList toList(Tree t){
-    ArrayList list = newArrayListWith(sizeT(t));
+    ArrayList list = newArrayList();
     AgregarElementos(t, list);
     return list; 
 }
@@ -75,7 +76,7 @@ void AgregarHojas(Tree t, ArrayList xs){
 
 // Dado un árbol devuelve los elementos que se encuentran en sus hojas.
 ArrayList leaves(Tree t){
-    ArrayList hojas = newArrayListWith(sizeT(t));
+    ArrayList hojas = newArrayList();
     AgregarHojas(t, hojas);
     return hojas;
 }
@@ -94,7 +95,7 @@ void agregarNivelN(int n, Tree t, ArrayList xs){
 
 // Dados un número n y un árbol devuelve una lista con los nodos de nivel n.
 ArrayList levelN(int n, Tree t){
-    ArrayList nivel = newArrayListWith(sizeT(t)); // sizeT(t) como capacidad máxima
+    ArrayList nivel = newArrayList(); 
     agregarNivelN(n, t, nivel);
     return nivel;
 }

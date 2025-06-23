@@ -2,6 +2,12 @@
 #include <iostream>
 using namespace std;
 
+struct NodeT {
+    int elem;
+    Tree left;  // Equivalente a NodeT* left
+    Tree right; // Equivalente a NodeT* right
+};
+
 Tree emptyT(){
     return NULL;  
 }

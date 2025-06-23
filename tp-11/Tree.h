@@ -1,8 +1,7 @@
-struct NodeT {
-    int elem;
-    NodeT* left;
-    NodeT* right;
-};
+#ifndef TREE_H   
+#define TREE_H
+
+struct NodeT;
 
 typedef NodeT* Tree;
 
@@ -18,3 +17,5 @@ int rootT(Tree t);
 Tree left(Tree t);
 // Devuelve el subárbol derecho del árbol. PRECOND.: el árbol no debe estar vacío
 Tree right(Tree t);
+
+#endif

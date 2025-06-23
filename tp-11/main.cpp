@@ -66,7 +66,7 @@ int main() {
     cout << "----------------------------------" << endl;
     
     cout << "creando queue vacia q1" << endl;
-    Queue q1 = emptyQ();
+    Queue q1 = emptyQ(); 
 
     cout << "enqueue 10, 20, 30 en q1" << endl;
     Enqueue(10, q1);
