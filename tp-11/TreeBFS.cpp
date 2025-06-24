@@ -1,38 +1,40 @@
-#include "Tree.h"
+#include "TreeBFS.h"
 #include "QueueT.h"
 
 // Dado un árbol binario de enteros devuelve la suma entre sus elementos usando un recorrido por niveles (BFS)
 int sumarT_BFS(Tree t) {
     int suma = 0;
-    QueueT q = emptyQ();
+    QueueT q = emptyQ(); // new Queue
     
-    if (!isEmptyT(t)) {
-        Enqueue(t, q);
+    if (!isEmptyT(t)) { // no 
+        Enqueue(t, q);  // q = [10]
     }
     
     while (!isEmptyQ(q)) {
-        Tree actual = firstQ(q);
+        Tree actual = firstQ(q); // Tree = Nodo
         Dequeue(q);
         suma += rootT(actual);
 
-        if (!isEmptyT(left(actual))) Enqueue(left(actual), q);
+        if (!isEmptyT(left(actual))) Enqueue(left(actual), q); 
+
         if (!isEmptyT(right(actual))) Enqueue(right(actual), q);
+
     }
     
-    DestroyQ(q);
+    DestroyQ(q); // delete q
     return suma;
 }
 
 /*
-       10
-      /  \
-     5    20
+       10                   10          [10 5 20 3 7 30]
+      /  \  
+     5    20                5 20
     / \     \
-   3   7    30   suma => 10 + 5 + 20 + 3 + 7 + 30 = 75
+   3   7    30              3 7 30    suma => 10 + 5 + 20 + 3 + 7 + 30 = 75
 
-   >> inicializamos la cola vacía y la suma en 0
-    int suma = 0;
-    QueueT q = emptyQ();
+    >> inicializamos la cola vacía y la suma en 0
+        int suma = 0;
+        QueueT q = emptyQ();
     
     >> el árbol ya está parado en su raiz, o sea 10.
 
@@ -43,7 +45,7 @@ int sumarT_BFS(Tree t) {
         }
         ...
     
-    ...Mientras el árbol NO sea vacío...
+    ...Mientras la q NO sea vacía...
 
     >> Procesar el primer nodo:
         ...
@@ -71,7 +73,7 @@ int sumarT_BFS(Tree t) {
         if (!isEmptyT(right(actual))) Enqueue(right(actual), q);// 7
         ... 
 
-    >> Entonces, la suma queda 15 y la cola queda con [20,3,7] (el que sigue, hijo izquierdo e hijo derecho )
+    >> Entonces, la suma queda 15 y la cola queda con [20,3,7] (el que sigue, hijo izquierdo e hijo derecho de 5 )
         suma = 15
         q = [20,3,7] (que son los que faltan por procesar)
 
@@ -134,8 +136,9 @@ int sumarT_BFS(Tree t) {
     >> Si la cola está vacía el bucle while termina, la suma queda en 75.
 
     Costos: 
-    O(N) donde N es el número de nodos
-    En memoria: M donde M es el ancho máximo del árbol (máxima cantidad de nodos por nivel)
+    - O(N) donde N es el número de nodos
+    - En memoria O(M): M donde M es el ancho máximo del árbol (máxima cantidad de nodos por nivel)
+                       Es la cantidad maxima de nodos de la queue que ocupan simultaneamente un espacio en memoria
  
     Estructura del recorrido BFS:
 
@@ -176,7 +179,7 @@ int sizeT_BFS(Tree t){
     while (!isEmptyQ(q)) {
         Tree actual = firstQ(q);
         Dequeue(q);
-        size += 1;
+        size++;
 
         // si no estan vacios, se meten el izquierdo y el derecho a la cola
         if (!isEmptyT(left(actual))) Enqueue(left(actual), q);
@@ -210,7 +213,6 @@ bool perteneceT(int e, Tree t){
     DestroyQ(q);
     return encontrado;
 }
-
 
 // Dados un elemento e y un árbol binario devuelve la cantidad de elementos del árbol que son iguales a e.
 int aparicionesT(int e, Tree t){

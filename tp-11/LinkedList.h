@@ -6,8 +6,7 @@ struct NodoL {
     NodoL* siguiente; // puntero al siguiente nodo
 };
 
-struct LinkedListSt {
-  // INV.REP.: cantidad indica la cantidad de nodos que se pueden recorrer desde primero por siguiente hasta alcanzar a NULL
+struct LinkedListSt { // INV.REP.: cantidad indica la cantidad de nodos que se pueden recorrer desde primero por siguiente hasta alcanzar a NULL
     int cantidad; // cantidad de elementos
     NodoL* primero; // puntero al primer nodo
 };

@@ -58,12 +58,12 @@ int main() {
     printList(hojas);  // [3, 7, 30]
 
     // levelN (nivel 1)
-    cout << "Nodos en nivel 1: ";
+    cout << "Nodos en nivel: 1 ";
     ArrayList nivelN = levelN(1, t);
     printList(nivelN);  // [5, 20]
 
     // levelN (nivel 1)
-    cout << "Nodos en nivel 2: ";
+    cout << "Nodos en nivel 2: " ;
     ArrayList nivelN2 = levelN(2, t);
     printList(nivelN2);  // [5, 20]
 
